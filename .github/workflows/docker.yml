@@ -1,7 +1,13 @@
 name: 构建 ngx_http_auth_digest 模块
 on:
   workflow_dispatch:
-
+    inputs:
+      ngx_stable_version_number:
+        description: 'literal'
+        required: true
+      module_version_number:
+        description: 'literal'
+        required: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -47,7 +53,7 @@ jobs:
           NGX_VERSION_NUMBER: ${{ github.event.inputs.ngx_stable_version_number }}
           MODULE_VERSION_NUMBER: ${{ github.event.inputs.module_version_number }}
         with:
-          context: ${{ env.IMAGE_NAME }}
+          context: .
           file: docker/Dockerfile.${{ env.TARGET }}
           build-args: |
             NGX_VER=stable
