@@ -1,20 +1,18 @@
 ARG NGX_VER=stable
-FROM nginx:${NGX_VER}-alpine as base
+FROM nginx:${NGX_VER} as base
 
 WORKDIR /usr/local/src
 
-SHELL ["/bin/sh", "-o", "pipefail", "-c"]
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN set -ex \
-    &&  apk --no-cache --update add -f \
+    &&  apt-get update --yes \
+    &&  apt-get install --yes build-essential \
             git \
-            gcc \
-            libc-dev \
-            make \
-            pcre-dev \
-            zlib-dev \
+            libpcre3-dev \
+            zlib1g-dev \
             python3 \
-            py3-pip \
+            python3-pip \
     &&  pip3 install lastversion
 
 RUN set -xe \

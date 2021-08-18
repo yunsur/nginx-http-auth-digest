@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     name: 构建多平台模块
     env:
-      IMAGE_NAME: ngx_http_auth_digest_module
+      IMAGE_NAME: ngx_http_auth_digest
     strategy:
       matrix:
-        target: ['musl']
+        target: ['glibc', 'musl']
     steps:
       -
         name: Checkout
@@ -67,4 +67,4 @@ jobs:
             linux/s390x
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/ngx-${{ env.NGX_VERSION_NUMBER }}-${{ env.MODULE_VERSION_NUMBER }}-${{ env.TARGET }}
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:ngx-${{ env.NGX_VERSION_NUMBER }}-${{ env.MODULE_VERSION_NUMBER }}-${{ env.TARGET }}
