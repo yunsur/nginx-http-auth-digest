@@ -42,13 +42,13 @@ jobs:
       -
         name: Buildx
         uses: docker/build-push-action@v2
+        env:
+          TARGET: ${{ matrix.target }}
+          NGX_VERSION_NUMBER: ${{ github.event.inputs.ngx_stable_version_number }}
+          MODULE_VERSION_NUMBER: ${{ github.event.inputs.module_version_number }}
         with:
           context: ${{ env.IMAGE_NAME }}
           file: docker/Dockerfile.${{ env.TARGET }}
-          env:
-            TARGET: ${{ matrix.target }}
-            NGX_VERSION_NUMBER: ${{ github.event.inputs.ngx_stable_version_number }}
-            MODULE_VERSION_NUMBER: ${{ github.event.inputs.module_version_number }}
           build-args: |
             NGX_VER=stable
           platforms: |
