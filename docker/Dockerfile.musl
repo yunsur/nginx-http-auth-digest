@@ -1,0 +1,33 @@
+ARG NGX_VER=stable
+FROM nginx:${NGX_VER}-alpine as base
+
+WORKDIR /usr/local/src
+
+SHELL ["/bin/sh", "-o", "pipefail", "-c"]
+
+RUN set -ex \
+    &&  apk --no-cache --update add -f \
+            git \
+            gcc \
+            libc-dev \
+            make \
+            pcre-dev \
+            zlib-dev \
+            python3 \
+            py3-pip \
+    &&  pip3 install lastversion
+
+RUN set -xe \
+    &&  git clone https://github.com/samizdatco/nginx-http-auth-digest.git ngx_http_auth_digest \
+    &&  lastversion --download="nginx.tar.gz" --major stable https://nginx.org \
+    &&  mkdir nginx && tar -zxf "nginx.tar.gz" -C nginx --strip-components=1 \
+    &&  cd nginx \
+    &&  ./configure \
+        --add-dynamic-module=/usr/local/src/ngx_http_auth_digest \
+        --with-compat \
+        --with-cc-opt='-fstack-protector-strong' \
+    &&  make modules -j$(nproc)
+
+
+FROM busybox:stable-musl
+COPY --from=base /usr/local/src/nginx/objs/ngx_http_auth_digest_module.so /modules/ngx_http_auth_digest_module.so
