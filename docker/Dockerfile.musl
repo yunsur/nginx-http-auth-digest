@@ -18,7 +18,7 @@ RUN set -ex \
     &&  pip3 install lastversion
 
 RUN set -xe \
-    &&  git clone https://github.com/samizdatco/nginx-http-auth-digest.git ngx_http_auth_digest \
+    &&  git clone https://github.com/yunsur/nginx-http-auth-digest.git ngx_http_auth_digest \
     &&  lastversion --download="nginx.tar.gz" --major stable https://nginx.org \
     &&  mkdir nginx && tar -zxf "nginx.tar.gz" -C nginx --strip-components=1 \
     &&  cd nginx \
